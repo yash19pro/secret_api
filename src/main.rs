@@ -32,9 +32,11 @@ async fn transform(data: web::Json<Request>) -> impl Responder {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     println!("Server running on http://localhost:8080");
+    let port = std::env::var("PORT").unwrap_or_else(|_| "8080".to_string());
+    let port: u16 = port.parse().expect("PORT must be a number");
 
     HttpServer::new(|| App::new().service(transform))
-        .bind(("127.0.0.1", 8080))?
+        .bind(("0.0.0.0", port))?
         .run()
         .await
 }
